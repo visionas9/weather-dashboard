@@ -67,3 +67,33 @@ body {
 .coral-glow {
   box-shadow: 0 0 24px rgba(255, 107, 107, 0.25);
 }
+
+/* Ambient page background gradient */
+.page-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 10%, rgba(255, 107, 107, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(79, 195, 247, 0.05) 0%, transparent 60%),
+    #0f0e17;
+}
+
+/* Smooth fade-in */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease both;
+}
+
+.animate-fade-in-delay {
+  animation: fade-in 0.4s ease 0.1s both;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fade-in 0.4s ease 0.2s both;
+}
+
+.animate-fade-in-delay-3 {
+  animation: fade-in 0.4s ease 0.3s both;
+}

@@ -1,13 +1,26 @@
 export default function CurrentWeather() {
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-[#12121f] border border-white/5 shadow-[0_4px_32px_rgba(0,0,0,0.5)] p-6 md:p-8">
-      {/* Background radial glow accent */}
+    <div
+      className="relative overflow-hidden rounded-3xl border border-white/5 shadow-[0_8px_40px_rgba(0,0,0,0.6)] p-6 md:p-8"
+      style={{
+        background:
+          "linear-gradient(135deg, #161625 0%, #12121f 50%, #0f0f1c 100%)",
+      }}
+    >
+      {/* Background radial glow — coral top-right */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-10"
+        className="pointer-events-none absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-[0.12]"
         style={{
-          background:
-            "radial-gradient(circle, #ff6b6b 0%, transparent 70%)",
+          background: "radial-gradient(circle, #ff6b6b 0%, transparent 70%)",
+        }}
+      />
+      {/* Background radial glow — sky bottom-left */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-16 -left-16 w-60 h-60 rounded-full opacity-[0.07]"
+        style={{
+          background: "radial-gradient(circle, #4fc3f7 0%, transparent 70%)",
         }}
       />
 

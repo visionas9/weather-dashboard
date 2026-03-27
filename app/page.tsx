@@ -5,13 +5,15 @@ import FavoritesBar from "./components/FavoritesBar";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0f0e17] p-4 md:p-6 lg:p-8">
+    <main className="min-h-screen page-bg p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto flex flex-col gap-5">
         {/* Top bar: search */}
-        <SearchBar />
+        <div className="animate-fade-in">
+          <SearchBar />
+        </div>
 
         {/* Main content: hero weather card */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 animate-fade-in-delay">
           {/* Current weather — spans 2 columns on xl */}
           <div className="xl:col-span-2">
             <CurrentWeather />
@@ -25,10 +27,14 @@ export default function Home() {
         </div>
 
         {/* Forecast strip */}
-        <ForecastStrip />
+        <div className="animate-fade-in-delay-2">
+          <ForecastStrip />
+        </div>
 
         {/* Favorites */}
-        <FavoritesBar />
+        <div className="animate-fade-in-delay-3">
+          <FavoritesBar />
+        </div>
       </div>
     </main>
   );
