@@ -2,13 +2,30 @@
 
 import { useState, createContext } from "react";
 
-const weatherContext = createContext<any>(null);
+const WeatherContext = createContext<any>(null);
 
 export default function WeatherProvider({ children }: { children: any }) {
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(null);
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
+
+  return (
+    <WeatherContext.Provider
+      value={{
+        city,
+        setCity,
+        loading,
+        setLoading,
+        weather,
+        setWeather,
+        error,
+        setError,
+      }}
+    >
+      {children}
+    </WeatherContext.Provider>
+  );
 }
 
 /* data returns: 

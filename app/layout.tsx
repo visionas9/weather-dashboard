@@ -1,4 +1,5 @@
 import "./globals.css";
+import WeatherProvider from "./lib/WeatherProvider";
 
 export default function RootLayout({
   children,
@@ -8,7 +9,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full flex flex-col bg-[#0f0e17] text-[#e8e8f0] antialiased">
-        {children}
+        <WeatherProvider>{children}</WeatherProvider>
       </body>
     </html>
   );
