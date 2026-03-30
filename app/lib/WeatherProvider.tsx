@@ -1,14 +1,42 @@
 "use client";
 
-import { useState, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 
 const WeatherContext = createContext<any>(null);
 
 export default function WeatherProvider({ children }: { children: any }) {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("London");
   const [loading, setLoading] = useState(null);
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
+    null,
+  );
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      const geoRes = await fetch(
+        `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=3&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+      );
+      if (!geoRes.ok) throw new Error("City not found!");
+
+      const geoData = await geoRes.json();
+      const { lat, lon } = geoData[0];
+      setCoords({ lat, lon });
+
+      const weatherRes = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+      );
+      if (!weatherRes.ok) throw new Error("Coordinates not found!");
+      const weatherData = await weatherRes.json();
+      setWeather(weatherData);
+    };
+    fetchWeather();
+  }, []);
+
+  useEffect(() => {
+    console.log("weather updated:", weather);
+  }, [weather]);
 
   return (
     <WeatherContext.Provider
