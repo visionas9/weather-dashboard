@@ -5,7 +5,7 @@ import { useState, useEffect, createContext } from "react";
 const WeatherContext = createContext<any>(null);
 
 export default function WeatherProvider({ children }: { children: any }) {
-  const [city, setCity] = useState("London");
+  const [city, setCity] = useState("");
   const [loading, setLoading] = useState(null);
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
     null,
@@ -13,10 +13,14 @@ export default function WeatherProvider({ children }: { children: any }) {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
 
+  const controller = new AbortController();
+
   useEffect(() => {
     const fetchWeather = async () => {
+      if (!city) return;
       const geoRes = await fetch(
         `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=3&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+        { signal: controller.signal },
       );
       if (!geoRes.ok) throw new Error("City not found!");
 
@@ -25,17 +29,19 @@ export default function WeatherProvider({ children }: { children: any }) {
       setCoords({ lat, lon });
 
       const weatherRes = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
       );
       if (!weatherRes.ok) throw new Error("Coordinates not found!");
       const weatherData = await weatherRes.json();
       setWeather(weatherData);
     };
     fetchWeather();
-  }, []);
+
+    return () => controller.abort(); // cancels stale requests on city change
+  }, [city]);
 
   useEffect(() => {
-    console.log("weather updated:", weather);
+    console.log(weather);
   }, [weather]);
 
   return (
@@ -55,6 +61,8 @@ export default function WeatherProvider({ children }: { children: any }) {
     </WeatherContext.Provider>
   );
 }
+
+export { WeatherContext };
 
 /* data returns: 
 {

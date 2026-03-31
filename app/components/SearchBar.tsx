@@ -1,4 +1,18 @@
+"use client";
+import { useContext, useState, useId } from "react";
+import { WeatherContext } from "../lib/WeatherProvider";
+
 export default function SearchBar() {
+  const { city, setCity } = useContext(WeatherContext);
+  const [citySearch, setCitySearch]: any = useState("");
+  const id = useId();
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      setCity(citySearch);
+    } else return null;
+  };
+
   return (
     <div className="w-full flex items-center gap-3">
       {/* Search input wrapper */}
@@ -22,8 +36,13 @@ export default function SearchBar() {
           type="text"
           placeholder="Search city…"
           className="flex-1 bg-transparent text-[#e8e8f0] placeholder-white/20 text-sm outline-none"
-          readOnly
+          value={citySearch}
+          id={id}
+          onChange={(e) => setCitySearch(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
+
+        <button onClick={(e) => setCity(citySearch)}>Search</button>
 
         {/* Location pin chip */}
         <span className="hidden sm:flex items-center gap-1.5 text-xs text-white/30 bg-white/5 rounded-xl px-3 py-1.5">

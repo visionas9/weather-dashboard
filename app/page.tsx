@@ -1,5 +1,5 @@
 import SearchBar from "./components/SearchBar";
-import CurrentWeather from "./components/CuurentWeather";
+import CurrentWeather from "./components/CurrentWeather";
 import ForecastStrip from "./components/ForecastStrip";
 import FavoritesBar from "./components/FavoritesBar";
 
