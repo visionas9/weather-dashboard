@@ -40,10 +40,6 @@ export default function WeatherProvider({ children }: { children: any }) {
     return () => controller.abort(); // cancels stale requests on city change
   }, [city]);
 
-  useEffect(() => {
-    console.log(weather);
-  }, [weather]);
-
   return (
     <WeatherContext.Provider
       value={{
@@ -55,6 +51,8 @@ export default function WeatherProvider({ children }: { children: any }) {
         setWeather,
         error,
         setError,
+        coords,
+        setCoords,
       }}
     >
       {children}
