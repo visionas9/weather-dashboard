@@ -48,7 +48,23 @@ export default function ForecastStrip() {
 
       console.log("grouped list:", groupedForecastList);
 
+      const date = new Date().getTime() / 1000;
+      const closestForecastTime = groupedForecastList.map((item: any) => {
+        const getClosestTimeForEachItem = item.reduce(
+          (closest: any, current: any) => {
+            const currentDt = Math.abs(date - current.dt);
+            const closestDt = Math.abs(date - closest.dt);
 
+            if (currentDt < closestDt) return current;
+            else return closest;
+          },
+          item[0],
+        );
+        return getClosestTimeForEachItem;
+      });
+
+      console.log("closest Forecast times per day:", closestForecastTime);
+    };
 
     getCurrentForecastData();
   }, [forecast]); // updates based on forecast changes
