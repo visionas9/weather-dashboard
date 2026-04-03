@@ -46,8 +46,6 @@ export default function ForecastStrip() {
         }, {}),
       ).slice(0, 5);
 
-      console.log("grouped list:", groupedForecastList);
-
       const date = new Date().getTime() / 1000;
       const closestForecastTime = groupedForecastList.map((item: any) => {
         const getClosestTimeForEachItem = item.reduce(
