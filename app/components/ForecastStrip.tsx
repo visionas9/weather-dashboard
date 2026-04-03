@@ -13,29 +13,38 @@ const forecastDays = [
 export default function ForecastStrip() {
   const { city, coords } = useContext(WeatherContext);
   const [forecast, setForecast] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const controller = new AbortController();
 
   useEffect(() => {
     const fetchForecast = async () => {
-      if (!city) return;
-      if (!coords) return;
-      const { lat, lon } = coords;
-      const forecastRes = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
-      );
-      if (!forecastRes.ok) throw new Error("Forecast not found!");
-      const forecastData = await forecastRes.json();
-      setForecast(forecastData);
+      setLoading(true);
+      try {
+        if (!city && !coords) return;
+        const { lat, lon } = coords;
+        const forecastRes = await fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+        );
+        if (!forecastRes.ok) throw new Error("Forecast not found!");
+        const forecastData = await forecastRes.json();
+        if (!forecastData || forecastData.length === 0) {
+          throw new Error("Data fetch is unsuccessful.");
+        }
+        setForecast(forecastData);
+      } catch (error) {
+        console.error("Something went wrong:", error);
+      } finally {
+        setLoading(false);
+      }
+      fetchForecast();
     };
-    fetchForecast();
 
     return () => controller.abort();
   }, [city, coords]);
 
   useEffect(() => {
     const getCurrentForecastData = () => {
-      console.log("forecast:", forecast);
       if (!forecast) return;
 
       const groupedForecastList: any = Object.values(
