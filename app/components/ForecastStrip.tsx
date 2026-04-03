@@ -37,9 +37,8 @@ export default function ForecastStrip() {
       } finally {
         setLoading(false);
       }
-      fetchForecast();
     };
-
+    fetchForecast();
     return () => controller.abort();
   }, [city, coords]);
 
@@ -69,7 +68,6 @@ export default function ForecastStrip() {
         );
         return getClosestTimeForEachItem;
       });
-
       console.log("closest Forecast times per day:", closestForecastTime);
     };
 
