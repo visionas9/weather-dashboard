@@ -4,6 +4,7 @@ import { WeatherContext } from "../lib/WeatherProvider";
 
 export default function CurrentWeather() {
   const { weather, setWeather } = useContext(WeatherContext);
+  console.log(weather);
 
   if (!weather) return <p>Search for a city to see the current weather.</p>;
 
@@ -49,7 +50,11 @@ export default function CurrentWeather() {
         {/* Condition badge */}
         <span className="flex items-center gap-1.5 bg-white/5 border border-white/5 rounded-full px-3 py-1.5 text-xs text-white/60 shrink-0">
           {/* Create emojis array for each weather condition and match with the weather */}
-          <span className="text-base">☀️</span>
+          <img
+            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+            alt="weather icon"
+            className="w-6 h-6"
+          />
           {weather.weather[0].description}
         </span>
       </div>
