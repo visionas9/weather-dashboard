@@ -2,18 +2,11 @@
 import { useContext, useEffect, useState } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
 
-const forecastDays = [
-  { day: "Today", icon: "☀️", condition: "Clear", low: 9, high: 13 },
-  { day: "Mon", icon: "🌤️", condition: "Partly Cloudy", low: 8, high: 12 },
-  { day: "Tue", icon: "🌥️", condition: "Cloudy", low: 7, high: 10 },
-  { day: "Wed", icon: "🌦️", condition: "Light Rain", low: 6, high: 9 },
-  { day: "Thu", icon: "⛅", condition: "Partly Cloudy", low: 8, high: 11 },
-];
-
 export default function ForecastStrip() {
   const { city, coords } = useContext(WeatherContext);
   const [forecast, setForecast] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [displayForecast, setDisplayForecast] = useState<any>(null);
 
   const controller = new AbortController();
 
@@ -26,7 +19,7 @@ export default function ForecastStrip() {
         if (!coords) return;
         const { lat, lon } = coords;
         const forecastRes = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
         );
         if (!forecastRes.ok) throw new Error("Forecast not found!");
         const forecastData = await forecastRes.json();
@@ -70,11 +63,66 @@ export default function ForecastStrip() {
         );
         return getClosestTimeForEachItem;
       });
-      console.log("closest Forecast times per day:", closestForecastTime);
+      if (!closestForecastTime) return;
+      setDisplayForecast(closestForecastTime);
     };
 
     getCurrentForecastData();
   }, [forecast]); // updates based on forecast changes
+
+  if (!displayForecast) return;
+  const renderForecast = displayForecast.map((item: any, i: number) => (
+    <div
+      key={item.dt}
+      className={`
+              flex flex-col items-center gap-2 rounded-2xl px-2 py-4
+              border transition-colors
+              ${
+                i === 0
+                  ? "bg-[#ff6b6b]/10 border-[#ff6b6b]/20"
+                  : "bg-[#12121f] border-white/5 hover:border-white/10"
+              }
+              shadow-[0_4px_16px_rgba(0,0,0,0.35)]
+            `}
+    >
+      {/* Day label */}
+      <span
+        className={`text-xs font-semibold tracking-wide uppercase ${
+          i === 0 ? "text-[#ff6b6b]" : "text-white/40"
+        }`}
+      >
+        {new Date(item.dt_txt.slice(0, 10)).toLocaleDateString("en-US", {
+          weekday: "long",
+        })}
+      </span>
+
+      {/* Weather icon */}
+
+      <img
+        src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+        alt="weather icon"
+      />
+
+      {/* Condition */}
+      <span className="text-[10px] text-white/30 text-center leading-tight hidden sm:block">
+        {item.weather.description}
+      </span>
+
+      {/* Temp range */}
+      <div className="flex flex-col items-center gap-0.5">
+        <span
+          className={`text-sm font-bold ${
+            i === 0 ? "text-white" : "text-white/80"
+          }`}
+        >
+          {Math.round(item.main.temp_max)}°
+        </span>
+        <span className="text-xs text-white/30">
+          {Math.round(item.main.temp_min)}°
+        </span>
+      </div>
+    </div>
+  ));
 
   return (
     <div className="w-full">
@@ -87,52 +135,7 @@ export default function ForecastStrip() {
       </div>
 
       {/* Cards row */}
-      <div className="grid grid-cols-5 gap-3">
-        {forecastDays.map((item, i) => (
-          <div
-            key={item.day}
-            className={`
-              flex flex-col items-center gap-2 rounded-2xl px-2 py-4
-              border transition-colors
-              ${
-                i === 0
-                  ? "bg-[#ff6b6b]/10 border-[#ff6b6b]/20"
-                  : "bg-[#12121f] border-white/5 hover:border-white/10"
-              }
-              shadow-[0_4px_16px_rgba(0,0,0,0.35)]
-            `}
-          >
-            {/* Day label */}
-            <span
-              className={`text-xs font-semibold tracking-wide uppercase ${
-                i === 0 ? "text-[#ff6b6b]" : "text-white/40"
-              }`}
-            >
-              {item.day}
-            </span>
-
-            {/* Weather icon */}
-            <span className="text-2xl leading-none">{item.icon}</span>
-
-            {/* Condition */}
-            <span className="text-[10px] text-white/30 text-center leading-tight hidden sm:block">
-              {item.condition}
-            </span>
-
-            {/* Temp range */}
-            <div className="flex flex-col items-center gap-0.5">
-              <span
-                className={`text-sm font-bold ${
-                  i === 0 ? "text-white" : "text-white/80"
-                }`}
-              >
-                {item.high}°
-              </span>
-              <span className="text-xs text-white/30">{item.low}°</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <div className="grid grid-cols-5 gap-3">{renderForecast}</div>
     </div>
   );
 }
