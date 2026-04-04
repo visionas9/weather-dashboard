@@ -12,6 +12,7 @@ export default function WeatherProvider({ children }: { children: any }) {
   );
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   const controller = new AbortController();
 
@@ -40,6 +41,17 @@ export default function WeatherProvider({ children }: { children: any }) {
     return () => controller.abort(); // cancels stale requests on city change
   }, [city]);
 
+  // Read from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("favorites");
+    if (stored) setFavorites(JSON.parse(stored));
+  }, []);
+
+  // Save to localStorage when favorites changes
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
   return (
     <WeatherContext.Provider
       value={{
@@ -53,6 +65,8 @@ export default function WeatherProvider({ children }: { children: any }) {
         setError,
         coords,
         setCoords,
+        favorites,
+        setFavorites,
       }}
     >
       {children}
@@ -61,41 +75,3 @@ export default function WeatherProvider({ children }: { children: any }) {
 }
 
 export { WeatherContext };
-
-/* data returns: 
-{
-"coord":{"lon":21.0118,"lat":52.2298},
-"weather":[
-{"id":800,
-"main":"Clear",
-"description":"clear sky",
-"icon":"01n"}
-],
-"base":"stations",
-"main":{
-"temp":11.55,
-"feels_like":9.96,
-"temp_min":9.26,
-"temp_max":12.74,
-"pressure":1014,
-"humidity":46,
-"sea_level":1014,
-"grnd_level":1004
-},
-"visibility":10000,
-"wind":{"speed":2.06,"deg":220},
-"clouds":{"all":0},
-"dt":1774378611,
-"sys":{
-"type":2,
-"id":2032856,
-"country":"PL",
-"sunrise":1774326585,
-"sunset":1774371283
-},
-"timezone":3600,
-"id":756135,
-"name":"Warsaw",
-"cod":200
-}
-*/

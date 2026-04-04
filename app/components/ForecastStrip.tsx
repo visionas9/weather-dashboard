@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
 
 export default function ForecastStrip() {
-  const { city, coords } = useContext(WeatherContext);
+  const { city, coords, weather } = useContext(WeatherContext);
   const [forecast, setForecast] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [displayForecast, setDisplayForecast] = useState<any>(null);
@@ -73,10 +73,16 @@ export default function ForecastStrip() {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-3 px-1">
-        <h3 className="text-xs font-semibold tracking-widest text-white/30 uppercase">
-          5-Day Forecast
-        </h3>
-        <span className="text-xs text-white/20">Warsaw, PL</span>
+        {weather && (
+          <h3 className="text-xs font-semibold tracking-widest text-white/30 uppercase">
+            5 Day Forecast
+          </h3>
+        )}
+        {weather && (
+          <span className="text-xs text-white/20">
+            {weather.name}, {weather.sys.country}
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-5 gap-3">
@@ -87,48 +93,30 @@ export default function ForecastStrip() {
             <div
               key={item.dt}
               className={`
-              flex flex-col items-center gap-2 rounded-2xl px-2 py-4
-              border transition-colors
-              ${
-                i === 0
-                  ? "bg-[#ff6b6b]/10 border-[#ff6b6b]/20"
-                  : "bg-[#12121f] border-white/5 hover:border-white/10"
-              }
-              shadow-[0_4px_16px_rgba(0,0,0,0.35)]
-            `}
+                flex flex-col items-center gap-2 rounded-2xl px-2 py-4
+                border transition-colors
+                ${i === 0 ? "bg-[#ff6b6b]/10 border-[#ff6b6b]/20" : "bg-[#12121f] border-white/5 hover:border-white/10"}
+                shadow-[0_4px_16px_rgba(0,0,0,0.35)]
+              `}
             >
-              {/* Day label */}
               <span
-                className={`text-xs font-semibold tracking-wide uppercase ${
-                  i === 0 ? "text-[#ff6b6b]" : "text-white/40"
-                }`}
+                className={`text-xs font-semibold tracking-wide uppercase ${i === 0 ? "text-[#ff6b6b]" : "text-white/40"}`}
               >
                 {new Date(item.dt_txt.slice(0, 10)).toLocaleDateString(
                   "en-US",
-                  {
-                    weekday: "long",
-                  },
+                  { weekday: "long" },
                 )}
               </span>
-
-              {/* Weather icon */}
-
               <img
                 src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
                 alt="weather icon"
               />
-
-              {/* Condition */}
               <span className="text-[10px] text-white/30 text-center leading-tight hidden sm:block">
                 {item.weather[0].description}
               </span>
-
-              {/* Temp range */}
               <div className="flex flex-col items-center gap-0.5">
                 <span
-                  className={`text-sm font-bold ${
-                    i === 0 ? "text-white" : "text-white/80"
-                  }`}
+                  className={`text-sm font-bold ${i === 0 ? "text-white" : "text-white/80"}`}
                 >
                   {Math.round(item.main.temp_max)}°
                 </span>

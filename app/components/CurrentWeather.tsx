@@ -3,10 +3,40 @@ import { useContext } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
 
 export default function CurrentWeather() {
-  const { weather, setWeather } = useContext(WeatherContext);
-  console.log(weather);
+  const { weather, city, favorites, setFavorites } = useContext(WeatherContext);
 
-  if (!weather) return <p>Search for a city to see the current weather.</p>;
+  const isFavorited = favorites.some(
+    (f: any) => f.city.toLowerCase() === city.toLowerCase(),
+  );
+
+  const toggleFavorite = () => {
+    if (isFavorited) {
+      setFavorites(
+        favorites.filter(
+          (f: any) => f.city.toLowerCase() !== city.toLowerCase(),
+        ),
+      );
+    } else {
+      setFavorites([
+        ...favorites,
+        {
+          city: weather.name,
+          country: weather.sys.country,
+          temp: Math.round(weather.main.temp),
+          icon: weather.weather[0].icon,
+        },
+      ]);
+    }
+  };
+  if (!weather)
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-3">
+        <span className="text-4xl">🌤️</span>
+        <p className="text-white/40 text-sm font-medium">
+          Search for a city to see the current weather.
+        </p>
+      </div>
+    );
 
   return (
     <div
@@ -48,15 +78,19 @@ export default function CurrentWeather() {
         </div>
 
         {/* Condition badge */}
-        <span className="flex items-center gap-1.5 bg-white/5 border border-white/5 rounded-full px-3 py-1.5 text-xs text-white/60 shrink-0">
-          {/* Create emojis array for each weather condition and match with the weather */}
-          <img
-            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
-            alt="weather icon"
-            className="w-6 h-6"
-          />
-          {weather.weather[0].description}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="flex items-center gap-1.5 bg-white/5 border border-white/5 rounded-full px-3 py-1.5 text-xs text-white/60 shrink-0">
+            <img
+              src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+              alt="weather icon"
+              className="w-6 h-6"
+            />
+            {weather.weather[0].description}
+          </span>
+          <button onClick={toggleFavorite} className="text-lg leading-none">
+            {isFavorited ? "❤️" : "🤍"}
+          </button>
+        </div>
       </div>
 
       {/* Hero temperature row */}
