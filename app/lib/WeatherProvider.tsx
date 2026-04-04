@@ -30,7 +30,7 @@ export default function WeatherProvider({
       setLoading(true);
       try {
         const geoRes = await fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=3&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+          `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=3&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
           { signal: controller.signal },
         );
         if (!geoRes.ok) throw new Error("City not found!");
