@@ -70,11 +70,23 @@ export default function ForecastStrip() {
     getCurrentForecastData();
   }, [forecast]); // updates based on forecast changes
 
-  if (!displayForecast) return;
-  const renderForecast = displayForecast.map((item: any, i: number) => (
-    <div
-      key={item.dt}
-      className={`
+  return (
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-3 px-1">
+        <h3 className="text-xs font-semibold tracking-widest text-white/30 uppercase">
+          5-Day Forecast
+        </h3>
+        <span className="text-xs text-white/20">Warsaw, PL</span>
+      </div>
+
+      <div className="grid grid-cols-5 gap-3">
+        {loading && <p className="text-white/40 text-xs">Loading...</p>}
+        {!loading &&
+          displayForecast &&
+          displayForecast.map((item: any, i: number) => (
+            <div
+              key={item.dt}
+              className={`
               flex flex-col items-center gap-2 rounded-2xl px-2 py-4
               border transition-colors
               ${
@@ -84,58 +96,49 @@ export default function ForecastStrip() {
               }
               shadow-[0_4px_16px_rgba(0,0,0,0.35)]
             `}
-    >
-      {/* Day label */}
-      <span
-        className={`text-xs font-semibold tracking-wide uppercase ${
-          i === 0 ? "text-[#ff6b6b]" : "text-white/40"
-        }`}
-      >
-        {new Date(item.dt_txt.slice(0, 10)).toLocaleDateString("en-US", {
-          weekday: "long",
-        })}
-      </span>
+            >
+              {/* Day label */}
+              <span
+                className={`text-xs font-semibold tracking-wide uppercase ${
+                  i === 0 ? "text-[#ff6b6b]" : "text-white/40"
+                }`}
+              >
+                {new Date(item.dt_txt.slice(0, 10)).toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "long",
+                  },
+                )}
+              </span>
 
-      {/* Weather icon */}
+              {/* Weather icon */}
 
-      <img
-        src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-        alt="weather icon"
-      />
+              <img
+                src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+                alt="weather icon"
+              />
 
-      {/* Condition */}
-      <span className="text-[10px] text-white/30 text-center leading-tight hidden sm:block">
-        {item.weather.description}
-      </span>
+              {/* Condition */}
+              <span className="text-[10px] text-white/30 text-center leading-tight hidden sm:block">
+                {item.weather[0].description}
+              </span>
 
-      {/* Temp range */}
-      <div className="flex flex-col items-center gap-0.5">
-        <span
-          className={`text-sm font-bold ${
-            i === 0 ? "text-white" : "text-white/80"
-          }`}
-        >
-          {Math.round(item.main.temp_max)}°
-        </span>
-        <span className="text-xs text-white/30">
-          {Math.round(item.main.temp_min)}°
-        </span>
+              {/* Temp range */}
+              <div className="flex flex-col items-center gap-0.5">
+                <span
+                  className={`text-sm font-bold ${
+                    i === 0 ? "text-white" : "text-white/80"
+                  }`}
+                >
+                  {Math.round(item.main.temp_max)}°
+                </span>
+                <span className="text-xs text-white/30">
+                  {Math.round(item.main.temp_min)}°
+                </span>
+              </div>
+            </div>
+          ))}
       </div>
-    </div>
-  ));
-
-  return (
-    <div className="w-full">
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-3 px-1">
-        <h3 className="text-xs font-semibold tracking-widest text-white/30 uppercase">
-          5-Day Forecast
-        </h3>
-        <span className="text-xs text-white/20">Warsaw, PL</span>
-      </div>
-
-      {/* Cards row */}
-      <div className="grid grid-cols-5 gap-3">{renderForecast}</div>
     </div>
   );
 }
