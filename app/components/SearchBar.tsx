@@ -3,14 +3,14 @@ import { useContext, useState, useId } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
 
 export default function SearchBar() {
-  const { city, setCity } = useContext(WeatherContext);
-  const [citySearch, setCitySearch]: any = useState("");
+  const { city, setCity } = useContext(WeatherContext)!;
+  const [citySearch, setCitySearch] = useState<string>("");
   const id = useId();
 
-  const handleKeyDown = (e: any) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setCity(citySearch);
-    } else return null;
+    }
   };
 
   return (

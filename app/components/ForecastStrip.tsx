@@ -1,12 +1,13 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
+import { ForecastItem } from "@/app/types/weather";
 
 export default function ForecastStrip() {
-  const { city, coords, weather } = useContext(WeatherContext);
+  const { city, coords, weather } = useContext(WeatherContext)!;
   const [forecast, setForecast] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [displayForecast, setDisplayForecast] = useState<any>(null);
+  const [displayForecast, setDisplayForecast] = useState<ForecastItem[] | null>(null);
 
   const controller = new AbortController();
 
@@ -41,26 +42,26 @@ export default function ForecastStrip() {
     const getCurrentForecastData = () => {
       if (!forecast) return;
 
-      const groupedForecastList: any = Object.values(
-        forecast.list.reduce((acc: any, item: any) => {
-          const key = item.dt_txt.slice(0, 10);
-          acc[key] = [...(acc[key] || []), item];
-          return acc;
-        }, {}),
-      ).slice(0, 5);
+      const groupedForecastList: ForecastItem[][] = Object.values(
+        forecast.list.reduce(
+          (acc: Record<string, ForecastItem[]>, item: ForecastItem) => {
+            const key = item.dt_txt.slice(0, 10);
+            acc[key] = [...(acc[key] || []), item];
+            return acc;
+          },
+          {},
+        ),
+      ).slice(0, 5) as ForecastItem[][];
 
       const date = new Date().getTime() / 1000;
-      const closestForecastTime = groupedForecastList.map((item: any) => {
-        const getClosestTimeForEachItem = item.reduce(
-          (closest: any, current: any) => {
-            const currentDt = Math.abs(date - current.dt);
-            const closestDt = Math.abs(date - closest.dt);
+      const closestForecastTime = groupedForecastList.map((item) => {
+        const getClosestTimeForEachItem = item.reduce((closest, current) => {
+          const currentDt = Math.abs(date - current.dt);
+          const closestDt = Math.abs(date - closest.dt);
 
-            if (currentDt < closestDt) return current;
-            else return closest;
-          },
-          item[0],
-        );
+          if (currentDt < closestDt) return current;
+          else return closest;
+        }, item[0]);
         return getClosestTimeForEachItem;
       });
       if (!closestForecastTime) return;
@@ -89,7 +90,7 @@ export default function ForecastStrip() {
         {loading && <p className="text-white/40 text-xs">Loading...</p>}
         {!loading &&
           displayForecast &&
-          displayForecast.map((item: any, i: number) => (
+          displayForecast.map((item, i) => (
             <div
               key={item.dt}
               className={`

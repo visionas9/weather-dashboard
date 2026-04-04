@@ -28,6 +28,24 @@ export interface Coords {
   lon: number;
 }
 
+export interface ForecastItem {
+  dt: number;
+  dt_txt: string;
+  main: {
+    temp: number;
+    temp_min: number;
+    temp_max: number;
+    feels_like: number;
+    humidity: number;
+    pressure: number;
+  };
+  weather: { description: string; icon: string }[];
+  clouds: { all: number };
+  wind: { speed: number; deg: number };
+  visibility: number;
+  pop: number;
+}
+
 export interface WeatherContextType {
   city: string;
   setCity: (city: string) => void;
