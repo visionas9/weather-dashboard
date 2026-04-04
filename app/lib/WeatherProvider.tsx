@@ -1,11 +1,20 @@
 "use client";
 
 import { useState, useEffect, createContext } from "react";
-import { Weather, Favorite, Coords, WeatherContextType } from "@/app/types/weather"
+import {
+  Weather,
+  Favorite,
+  Coords,
+  WeatherContextType,
+} from "@/app/types/weather";
 
 const WeatherContext = createContext<WeatherContextType | null>(null);
 
-export default function WeatherProvider({ children }: { children: any }) {
+export default function WeatherProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [coords, setCoords] = useState<Coords | null>(null);
   const [weather, setWeather] = useState<Weather | null>(null);
   const [favorites, setFavorites] = useState<Favorite[]>([]);

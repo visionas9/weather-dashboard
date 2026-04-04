@@ -45,9 +45,10 @@ export default function FavoritesBar() {
               {fav.temp}°
             </span>
             <button
-              onClick={() =>
+              onClick={(e) => {
+                e.stopPropagation()
                 setFavorites(favorites.filter((f) => f.city !== fav.city))
-              }
+              }}
               className="text-white/30 hover:text-white/60 transition-colors ml-1"
             >
               ❤️
