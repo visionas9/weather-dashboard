@@ -3,7 +3,8 @@ import { WeatherContext } from "../lib/WeatherProvider";
 import { useContext } from "react";
 
 export default function FavoritesBar() {
-  const { favorites, setFavorites, setCity, city } = useContext(WeatherContext);
+  const { favorites, setFavorites, setCity, city } =
+    useContext(WeatherContext)!;
 
   return (
     <div className="w-full">
@@ -14,7 +15,7 @@ export default function FavoritesBar() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        {favorites.map((fav: any, i: number) => (
+        {favorites.map((fav) => (
           <div
             key={fav.city}
             onClick={() => setCity(fav.city)}
@@ -45,7 +46,7 @@ export default function FavoritesBar() {
             </span>
             <button
               onClick={() =>
-                setFavorites(favorites.filter((f: any) => f.city !== fav.city))
+                setFavorites(favorites.filter((f) => f.city !== fav.city))
               }
               className="text-white/30 hover:text-white/60 transition-colors ml-1"
             >
