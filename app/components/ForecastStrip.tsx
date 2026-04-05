@@ -7,11 +7,12 @@ export default function ForecastStrip() {
   const { city, coords, weather } = useContext(WeatherContext)!;
   const [forecast, setForecast] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [displayForecast, setDisplayForecast] = useState<ForecastItem[] | null>(null);
-
-  const controller = new AbortController();
+  const [displayForecast, setDisplayForecast] = useState<ForecastItem[] | null>(
+    null,
+  );
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchForecast = async () => {
       setLoading(true);
 
@@ -21,6 +22,7 @@ export default function ForecastStrip() {
         const { lat, lon } = coords;
         const forecastRes = await fetch(
           `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
+          { signal: controller.signal },
         );
         if (!forecastRes.ok) throw new Error("Forecast not found!");
         const forecastData = await forecastRes.json();

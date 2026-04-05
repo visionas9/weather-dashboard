@@ -22,9 +22,9 @@ export default function WeatherProvider({
   const [loading, setLoading] = useState<boolean>(false);
   const [city, setCity] = useState<string>("");
 
-  const controller = new AbortController();
 
   useEffect(() => {
+      const controller = new AbortController();
     const fetchWeather = async () => {
       if (!city) return;
       setLoading(true);
