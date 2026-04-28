@@ -46,6 +46,10 @@ export interface ForecastItem {
   pop: number;
 }
 
+export interface ForecastResponse {
+  list: ForecastItem[];
+}
+
 export interface WeatherContextType {
   city: string;
   setCity: (city: string) => void;

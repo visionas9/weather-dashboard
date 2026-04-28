@@ -3,7 +3,7 @@ import { useContext, useState, useId } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
 
 export default function SearchBar() {
-  const { city, setCity } = useContext(WeatherContext)!;
+  const { setCity } = useContext(WeatherContext)!;
   const [citySearch, setCitySearch] = useState<string>("");
   const id = useId();
 

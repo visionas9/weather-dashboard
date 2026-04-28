@@ -22,9 +22,8 @@ export default function WeatherProvider({
   const [loading, setLoading] = useState<boolean>(false);
   const [city, setCity] = useState<string>("");
 
-
   useEffect(() => {
-      const controller = new AbortController();
+    const controller = new AbortController();
     const fetchWeather = async () => {
       if (!city) return;
       setLoading(true);
@@ -33,9 +32,12 @@ export default function WeatherProvider({
           `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=3&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`,
           { signal: controller.signal },
         );
-        if (!geoRes.ok) throw new Error("City not found!");
+        if (!geoRes.ok) throw new Error("Api error happened!");
 
         const geoData = await geoRes.json();
+        if (!geoData || geoData.length === 0) {
+          throw new Error("City not found!");
+        }
         const { lat, lon } = geoData[0];
         setCoords({ lat, lon });
 

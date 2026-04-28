@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
 
 export default function CurrentWeather() {
-  const { weather, city, favorites, setFavorites } =
+  const { weather, city, favorites, setFavorites, error } =
     useContext(WeatherContext)!;
 
   const isFavorited = favorites.some(
@@ -30,6 +30,10 @@ export default function CurrentWeather() {
       ]);
     }
   };
+
+  if (error) {
+    error && <p className="text-red-500 text-sm text-center">{error}</p>;
+  }
 
   return (
     <div

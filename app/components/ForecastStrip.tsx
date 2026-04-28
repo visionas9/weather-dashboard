@@ -1,11 +1,11 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import { WeatherContext } from "../lib/WeatherProvider";
-import { ForecastItem } from "@/app/types/weather";
+import { ForecastItem, ForecastResponse } from "@/app/types/weather";
 
 export default function ForecastStrip() {
   const { city, coords, weather } = useContext(WeatherContext)!;
-  const [forecast, setForecast] = useState<any>(null);
+  const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [displayForecast, setDisplayForecast] = useState<ForecastItem[] | null>(
     null,
